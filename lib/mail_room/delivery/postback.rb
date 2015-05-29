@@ -15,13 +15,14 @@ module MailRoom
       # @param message [String] the email message as a string, RFC822 format
       def deliver(message)
         connection = Faraday.new
+        connection.response :logger
         connection.token_auth @mailbox.delivery_token
 
         connection.post do |request|
           request.url @mailbox.delivery_url
           request.body = message
           # request.options[:timeout] = 3
-          # request.headers['Content-Type'] = 'text/plain'
+          request.headers['Content-Type'] = 'text/html'
         end
       end
     end
